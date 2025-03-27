@@ -23,12 +23,16 @@ jobs:
 
       - name: Prepare Helm charts matrix
         id: set-matrix
+        # run: |
+        #   # Find chart directories inside the 'charts' folder and create a matrix
+        #   CHARTS_PATHS=$(find ./charts -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+        #   MATRIX=$(echo "${CHARTS_PATHS}" | tr ' ' '\n' | jq -R . | jq -s .)
+        #   echo "Matrix: $MATRIX"
+        #   echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
         run: |
-          # Find chart directories inside the 'charts' folder and create a matrix
-          CHARTS_PATHS=$(find ./charts -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
-          MATRIX=$(echo "${CHARTS_PATHS}" | tr ' ' '\n' | jq -R . | jq -s .)
-          echo "Matrix: $MATRIX"
-          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+          CHARTS_PATHS=$(find ./charts -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
+          echo "Matrix: $CHARTS_PATHS"
+          echo "matrix=$CHARTS_PATHS" >> $GITHUB_OUTPUT
 
   build:
     needs: prepare-matrix
