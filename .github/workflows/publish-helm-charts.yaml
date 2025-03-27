@@ -48,10 +48,9 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ github.token }}
+          password: ${{ secrets.PACKAGES_TOKEN }}
 
       - name: Package and push helm chart
         run: |
-          owner="${GITHUB_REPOSITORY_OWNER,,}"
           helm package ./charts/${{ matrix.chart }} --version ${{ env.VERSION }}
-          helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://ghcr.io/$owner/helm-charts
+          helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://ghcr.io/${{ github.actor }}/helm-charts
