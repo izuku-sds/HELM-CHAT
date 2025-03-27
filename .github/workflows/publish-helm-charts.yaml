@@ -23,12 +23,6 @@ jobs:
 
       - name: Prepare Helm charts matrix
         id: set-matrix
-        # run: |
-        #   # Find chart directories inside the 'charts' folder and create a matrix
-        #   CHARTS_PATHS=$(find ./charts -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
-        #   MATRIX=$(echo "${CHARTS_PATHS}" | tr ' ' '\n' | jq -R . | jq -s .)
-        #   echo "Matrix: $MATRIX"
-        #   echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
         run: |
           CHARTS_PATHS=$(find ./charts -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')
           echo "Matrix: $CHARTS_PATHS"
@@ -58,5 +52,6 @@ jobs:
 
       - name: Package and push helm chart
         run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
           helm package ./charts/${{ matrix.chart }} --version ${{ env.VERSION }}
-          helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://${{ env.REPOSITORY }}/charts
+          helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://ghcr.io/$owner/helm-charts
