@@ -4,16 +4,15 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'charts/**'
   
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   prepare-matrix:
-    permissions:
-      contents: read
-      packages: write
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -32,6 +31,7 @@ jobs:
     needs: prepare-matrix
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         chart: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     steps:
@@ -48,7 +48,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.PACKAGES_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Package and push helm chart
         run: |
