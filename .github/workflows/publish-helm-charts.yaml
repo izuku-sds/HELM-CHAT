@@ -7,10 +7,6 @@ on:
   
   workflow_dispatch:
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   prepare-matrix:
     runs-on: ubuntu-latest
@@ -28,6 +24,10 @@ jobs:
           echo "matrix=$CHARTS_PATHS" >> $GITHUB_OUTPUT
 
   build:
+    permissions:
+      contents: read
+      packages: write
+
     needs: prepare-matrix
     runs-on: ubuntu-latest
     strategy:
