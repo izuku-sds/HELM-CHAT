@@ -41,6 +41,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Helm dependency build
+        run: helm dependency build
+        working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
+
       - name: Helm lint
         run: helm lint
         working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
