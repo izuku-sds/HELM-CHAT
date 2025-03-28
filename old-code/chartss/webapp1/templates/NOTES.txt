@@ -1,4 +1,0 @@
-
-
-Hola community
-kubectl port-forward service/{{ .Values.appName }} 8080:80 --namespace {{ .Values.namespace }}

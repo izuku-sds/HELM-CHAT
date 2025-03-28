@@ -1,82 +1,105 @@
-# Kubeflow Trainer
+# kubeflow-trainer
 
-[![Build Status](https://github.com/kubeflow/training-operator/actions/workflows/test-go.yaml/badge.svg?branch=master)](https://github.com/kubeflow/training-operator/actions/workflows/test-go.yaml?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/kubeflow/training-operator/badge.svg?branch=master)](https://coveralls.io/github/kubeflow/training-operator?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/training-operator)](https://goreportcard.com/report/github.com/kubeflow/training-operator)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
-<h1 align="center">
-    <img src="./docs/images/trainer-logo.svg" alt="logo" width="200">
-  <br>
-</h1>
+A Helm chart for deploying Kubeflow Trainer on Kubernetes.
 
-## Overview
+**Homepage:** <https://github.com/kubeflow/trainer>
 
-Kubeflow Trainer is a Kubernetes-native project designed for large language models (LLMs)
-fine-tuning and enabling scalable, distributed training of machine learning (ML) models across
-various frameworks, including PyTorch, JAX, TensorFlow, and others.
+## Introduction
 
-You can integrate other ML libraries such as [HuggingFace](https://huggingface.co),
-[DeepSpeed](https://github.com/microsoft/DeepSpeed), or [Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
-with Kubeflow Training to orchestrate their ML training on Kubernetes.
+This chart bootstraps a [Kubernetes Trainer](https://github.com/kubeflow/trainer) deployment using the [Helm](https://helm.sh) package manager.
 
-Kubeflow Trainer allows you effortlessly develop your LLMs with the Kubeflow Python SDK and
-build Kubernetes-native Training Runtimes with Kubernetes Custom Resources APIs.
+## Prerequisites
 
-<h1 align="center">
-    <img src="./docs/images/trainer-tech-stack.drawio.svg" alt="logo" width="500">
-  <br>
-</h1>
+- Helm >= 3
+- Kubernetes >= 1.29
 
-## Kubeflow Trainer Introduction
+## Usage
 
-The following KubeCon + CloudNativeCon 2024 talk provides an overview of Kubeflow Trainer capabilities:
+### Add Helm Repo
 
-[![Kubeflow Trainer](https://img.youtube.com/vi/Lgy4ir1AhYw/0.jpg)](https://www.youtube.com/watch?v=Lgy4ir1AhYw)
+```bash
+helm repo add kubeflow-trainer https://kubeflow.github.io/trainer
 
-## Getting Started
+helm repo update
+```
 
-Please check [the official Kubeflow documentation](https://www.kubeflow.org/docs/components/trainer/getting-started)
-to install and get started with Kubeflow Trainer.
+See [helm repo](https://helm.sh/docs/helm/helm_repo) for command documentation.
 
-## Community
+### Install the chart
 
-The following links provide information on how to get involved in the community:
+```bash
+helm install [RELEASE_NAME] kubeflow-trainer/kubeflow-trainer
+```
 
-- Join our [`#kubeflow-training` Slack channel](https://www.kubeflow.org/docs/about/community/#kubeflow-slack).
-- Attend [the bi-weekly AutoML and Training Working Group](https://bit.ly/2PWVCkV) community meeting.
-- Check out [who is using Kubeflow Trainer](ADOPTERS.md).
+For example, if you want to create a release with name `kubeflow-trainer` in the `kubeflow-system` namespace:
 
-## Contributing
+```shell
+helm upgrade kubeflow-trainer kubeflow-trainer/kubeflow-trainer \
+    --install \
+    --namespace kubeflow-system \
+    --create-namespace
+```
 
-Please refer to the [CONTRIBUTING guide](CONTRIBUTING.md).
+Note that by passing the `--create-namespace` flag to the `helm install` command, `helm` will create the release namespace if it does not exist.
+If you have already installed jobset controller/webhook, you can skip installing it by adding `--set jobset.install=false` to the command arguments.
 
-## Changelog
+See [helm install](https://helm.sh/docs/helm/helm_install) for command documentation.
 
-Please refer to the [CHANGELOG](CHANGELOG.md).
+### Upgrade the chart
 
-## Kubeflow Training Operator V1
+```shell
+helm upgrade [RELEASE_NAME] kubeflow-trainer/kubeflow-trainer [flags]
+```
 
-Kubeflow Trainer project is currently in <strong>alpha</strong> status, and APIs may change.
-If you are using Kubeflow Training Operator V1, please refer [to this migration document](https://www.kubeflow.org/docs/components/trainer/operator-guides/migration/).
+See [helm upgrade](https://helm.sh/docs/helm/helm_upgrade) for command documentation.
 
-Kubeflow Community will maintain the Training Operator V1 source code at
-[the `release-1.9` branch](https://github.com/kubeflow/training-operator/tree/release-1.9).
+### Uninstall the chart
 
-You can find the documentation for Kubeflow Training Operator V1 in [these guides](https://www.kubeflow.org/docs/components/trainer/legacy-v1).
+```shell
+helm uninstall [RELEASE_NAME]
+```
 
-## Acknowledgement
+This removes all the Kubernetes resources associated with the chart and deletes the release, except for the `crds`, those will have to be removed manually.
 
-This project was originally started as a distributed training operator for TensorFlow and later we
-merged efforts from other Kubeflow Training Operators to provide a unified and simplified experience
-for both users and developers. We are very grateful to all who filed issues or helped resolve them,
-asked and answered questions, and were part of inspiring discussions.
-We'd also like to thank everyone who's contributed to and maintained the original operators.
+See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall) for command documentation.
 
-- PyTorch Operator: [list of contributors](https://github.com/kubeflow/pytorch-operator/graphs/contributors)
-  and [maintainers](https://github.com/kubeflow/pytorch-operator/blob/master/OWNERS).
-- MPI Operator: [list of contributors](https://github.com/kubeflow/mpi-operator/graphs/contributors)
-  and [maintainers](https://github.com/kubeflow/mpi-operator/blob/master/OWNERS).
-- XGBoost Operator: [list of contributors](https://github.com/kubeflow/xgboost-operator/graphs/contributors)
-  and [maintainers](https://github.com/kubeflow/xgboost-operator/blob/master/OWNERS).
-- Common library: [list of contributors](https://github.com/kubeflow/common/graphs/contributors) and
-  [maintainers](https://github.com/kubeflow/common/blob/master/OWNERS).
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| nameOverride | string | `""` | String to partially override release name. |
+| fullnameOverride | string | `""` | String to fully override release name. |
+| jobset.install | bool | `true` | Whether to install jobset as a dependency managed by trainer. This must be set to `false` if jobset controller/webhook has already been installed into the cluster. |
+| commonLabels | object | `{}` | Common labels to add to the resources. |
+| image.registry | string | `"docker.io"` | Image registry. |
+| image.repository | string | `"kubeflow/trainer-controller-manager"` | Image repository. |
+| image.tag | string | If not set, the chart version will be used. | Image tag. |
+| image.pullPolicy | string | `"IfNotPresent"` | Image pull policy. |
+| image.pullSecrets | list | `[]` | Image pull secrets for private image registry. |
+| manager.replicas | int | `1` | Number of replicas of manager. |
+| manager.labels | object | `{}` | Extra labels for manager pods. |
+| manager.annotations | object | `{}` | Extra annotations for manager pods. |
+| manager.volumes | list | `[]` | Volumes for manager pods. |
+| manager.nodeSelector | object | `{}` | Node selector for manager pods. |
+| manager.affinity | object | `{}` | Affinity for manager pods. |
+| manager.tolerations | list | `[]` | List of node taints to tolerate for manager pods. |
+| manager.env | list | `[]` | Environment variables for manager containers. |
+| manager.envFrom | list | `[]` | Environment variable sources for manager containers. |
+| manager.volumeMounts | list | `[]` | Volume mounts for manager containers. |
+| manager.resources | object | `{}` | Pod resource requests and limits for manager containers. |
+| manager.securityContext | object | `{}` | Security context for manager containers. |
+| webhook.failurePolicy | string | `"Fail"` | Specifies how unrecognized errors are handled. Available options are `Ignore` or `Fail`. |
+
+## Maintainers
+
+| Name | Url |
+| ---- | --- |
+| andreyvelich | <https://github.com/andreyvelich> |
+| ChenYi015 | <https://github.com/ChenYi015> |
+| gaocegege | <https://github.com/gaocegege> |
+| Jeffwan | <https://github.com/Jeffwan> |
+| johnugeorge | <https://github.com/johnugeorge> |
+| tenzen-y | <https://github.com/tenzen-y> |
+| terrytangyuan | <https://github.com/terrytangyuan> |
