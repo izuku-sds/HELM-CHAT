@@ -29,6 +29,7 @@ jobs:
       packages: write
 
     needs: prepare-matrix
+    if: ${{ needs.prepare-matrix.outputs.matrix != '[]'  && needs.prepare-matrix.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -62,12 +63,12 @@ jobs:
         working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
 
   publish:
-    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
 
     needs: [prepare-matrix, build]
+    if: github.ref == 'refs/heads/main' && ${{ needs.prepare-matrix.outputs.matrix != '[]'  && needs.prepare-matrix.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -99,10 +100,10 @@ jobs:
           helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://ghcr.io/${{ github.actor }}/helm-charts
 
   release:
-    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
     needs: [prepare-matrix, build, publish]
+    if: github.ref == 'refs/heads/main' && ${{ needs.prepare-matrix.outputs.matrix != '[]'  && needs.prepare-matrix.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
