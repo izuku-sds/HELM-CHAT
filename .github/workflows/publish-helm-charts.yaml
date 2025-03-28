@@ -102,6 +102,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
+    needs: [prepare-matrix, build, publish]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
