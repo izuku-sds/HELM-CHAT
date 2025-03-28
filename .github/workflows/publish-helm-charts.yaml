@@ -91,6 +91,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Helm dependency build
+        run: helm dependency build
+        working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
+
       - name: Package and push helm chart
         run: |
           helm package ${{ env.CHARTS_PATH }}/${{ matrix.chart }} --version ${{ env.VERSION }}
