@@ -26,7 +26,7 @@ jobs:
           echo "Matrix: $CHARTS_PATHS"
           echo "matrix=$CHARTS_PATHS" >> $GITHUB_OUTPUT
 
-  test:
+  build:
     permissions:
       contents: read
       packages: write
@@ -53,6 +53,11 @@ jobs:
         run: |
           helm template .
         working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
+      
+      - name: unit tests
+        run: |
+          helm unittest . --strict --file "tests/**/*_test.yaml"
+        working-directory: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}
        
       - name: Package Helm chart
         run: helm package . --destination .
@@ -65,11 +70,12 @@ jobs:
           path: ${{ env.CHARTS_PATH }}/${{ matrix.chart }}/*.tgz
 
   publish:
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
 
-    needs: [prepare-matrix, test]
+    needs: [prepare-matrix, build]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
