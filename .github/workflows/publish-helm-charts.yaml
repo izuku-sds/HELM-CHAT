@@ -69,7 +69,7 @@ jobs:
       contents: read
       packages: write
 
-    needs: prepare-matrix
+    needs: [prepare-matrix, test]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
