@@ -97,36 +97,9 @@ jobs:
         run: |
           helm package ${{ env.CHARTS_PATH }}/${{ matrix.chart }} --version ${{ env.VERSION }}
           helm push ./${{ matrix.chart }}-${{ env.VERSION }}.tgz oci://ghcr.io/${{ github.actor }}/helm-charts
-  
-  update-index:
-    permissions:
-      contents: write
-    needs: [prepare-matrix, build, publish]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        chart: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Set up Helm
-        uses: azure/setup-helm@v4.3.0
-
-      - name: Generate Helm Index
-        run: |
-          helm repo index ${{ env.CHARTS_PATH }}/${{ matrix.chart }}/ --url https://${{ github.actor }}.github.io/my-helm-repo/${{ env.CHARTS_PATH }}/${{ matrix.chart }}
-
-      - name: Commit index.yaml
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${{ env.CHARTS_PATH }}/${{ matrix.chart }}/index.yaml
-          git commit -m "Update Helm ${{ env.CHARTS_PATH }}/${{ matrix.chart }} index"
-          git push
 
   release:
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
     runs-on: ubuntu-latest
