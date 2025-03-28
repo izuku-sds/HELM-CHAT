@@ -14,7 +14,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@v4
 
       - name: Prepare Helm charts matrix
         id: set-matrix
@@ -43,8 +43,12 @@ jobs:
           VERSION=$(yq -r .version ./charts/${{ matrix.chart }}/Chart.yaml)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
+      - name: helm lint
+        run: |
+          helm lint ./charts/${{ matrix.chart }}/
+
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
