@@ -120,10 +120,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      # - name: Enable OCI support
-      #   run: echo "HELM_EXPERIMENTAL_OCI=1" >> $GITHUB_ENV
-      # - name: Publish Helm charts
-      #   uses: paschdan/helm-chart-release-to-repo-action@v1
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          skip_existing: false
           
