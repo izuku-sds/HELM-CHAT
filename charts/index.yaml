@@ -2,7 +2,39 @@ apiVersion: v1
 entries:
   kubeflow-trainer:
   - apiVersion: v2
-    created: "2025-03-29T06:40:12.612561536+05:30"
+    created: "2025-03-29T06:51:21.091190664+05:30"
+    dependencies:
+    - condition: jobset.install
+      name: jobset
+      repository: oci://us-central1-docker.pkg.dev/k8s-staging-images/charts
+      version: v0.8.0
+    description: A Helm chart for deploying Kubeflow Trainer on Kubernetes.
+    digest: 8834daf151e0afade8fd7e69f7b8582289f61c5de75a4e9a475527a08ce408bb
+    home: https://github.com/kubeflow/trainer
+    keywords:
+    - kubeflow trainer
+    maintainers:
+    - name: andreyvelich
+      url: https://github.com/andreyvelich
+    - name: ChenYi015
+      url: https://github.com/ChenYi015
+    - name: gaocegege
+      url: https://github.com/gaocegege
+    - name: Jeffwan
+      url: https://github.com/Jeffwan
+    - name: johnugeorge
+      url: https://github.com/johnugeorge
+    - name: tenzen-y
+      url: https://github.com/tenzen-y
+    - name: terrytangyuan
+      url: https://github.com/terrytangyuan
+    name: kubeflow-trainer
+    type: application
+    urls:
+    - https://izuku-sds.github.io/HELM-CHAT/kubeflow-trainer/kubeflow-trainer-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    created: "2025-03-29T06:51:21.075549217+05:30"
     dependencies:
     - condition: jobset.install
       name: jobset
@@ -33,4 +65,4 @@ entries:
     urls:
     - https://izuku-sds.github.io/HELM-CHAT/kubeflow-trainer/kubeflow-trainer-2.0.0.tgz
     version: 2.0.0
-generated: "2025-03-29T06:40:12.59971141+05:30"
+generated: "2025-03-29T06:51:21.06027693+05:30"
