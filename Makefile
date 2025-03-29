@@ -210,4 +210,9 @@ helm-docs: helm-docs-plugin ## Generates markdown documentation for helm charts 
 	$(HELM_DOCS) --sort-values-order=file
 
 # helm dependency update .
-# helm repo index ./charts --url https://yourusername.github.io/my-helm-repo/charts/kubeflow-trainer
+# helm package .
+# helm repo index ./charts --url https://izuku-sds.github.io/HELM-CHAT
+# helm repo add trainer https://izuku-sds.github.io/HELM-CHAT
+# trainer: local alias for the helm repo and kubeflow-trainer is name of chart, helm/kubeflow-trainer
+# helm install worker trainer/kubeflow-trainer
+# worker is the name of the release
